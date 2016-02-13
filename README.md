@@ -1,5 +1,7 @@
 # PPCG-Grad-Stats
 
+[![License](https://img.shields.io/:license-wtfpl-blue.svg?style=flat-square)](http://www.wtfpl.net)
+
 This is just a simple Python 3 script that gathers and prints basic graduation statistics for the [Stack Exchange](https://stackexchange.com) site [Programming Puzzles &amp; Code Golf](https://codegolf.stackexchange.com).
 It uses the [Stack Exchange API](https://api.stackexchange.com), v2.2.
 Data is gathered from the past two weeks.
