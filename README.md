@@ -6,6 +6,7 @@ This is just a simple Python 3 script that gathers and prints basic graduation s
 It uses the [Stack Exchange API](https://api.stackexchange.com), v2.2.
 Data is gathered from the past two weeks.
 Since the API is used rather than Stack Exchange Data Explorer, results are up to the minute.
+However, this also means that you're limited to 500 API requests per day (without an API key), so don't go too crazy.
 
 It's often pointed out that the statistics on [Area 51](https://area51.stackexchange.com) don't matter.
 As such, the only statistics that this currently gathers are the average questions per day (which *does* matter) and the average number of answers per question (for the curious).
