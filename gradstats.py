@@ -10,6 +10,7 @@ params = {
     "site": "codegolf",
     "fromdate": seconds_since_epoch(today - datetime.timedelta(days=14)),
     "todate": seconds_since_epoch(today),
+    "pagesize": 100,
     "page": 1
 }
 
