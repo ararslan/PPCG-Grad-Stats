@@ -1,36 +1,90 @@
-import requests, datetime, time
+import requests
+import time
+from datetime import datetime, timezone, timedelta
 
-def seconds_since_epoch(dt):
-    epoch = datetime.datetime(1970, 1, 1, tzinfo=datetime.timezone.utc)
-    return int((dt - epoch).total_seconds())
 
-today = datetime.datetime.now(datetime.timezone.utc)
+def get_questions(site, start, stop):
+    """Get all questions from a site within a given date range.
 
-params = {
-    "site": "codegolf",
-    "fromdate": seconds_since_epoch(today - datetime.timedelta(days=14)),
-    "todate": seconds_since_epoch(today),
-    "pagesize": 100,
-    "page": 1
-}
+    Args:
+        site (string): Stack Exchange site to get questions from
+        start (datetime): Beginning of date range for questions
+        stop (datetime): End of date range for questions
 
-base_url = "https://api.stackexchange.com/2.2"
+    Returns:
+        list: One dict per question
 
-results = []
+    Raises:
+        ValueError: If the API response is an error
 
-while True:
-    req = requests.get(base_url + "/questions", params=params)
-    contents = req.json()
-    results.extend(contents["items"])
-    if not contents["has_more"]:
-        break
-    if "backoff" in contents:
-        time.sleep(contents["backoff"])
-    params["page"] += 1
+    """
 
-questions_per_day = len(results) / 14
-answers_per_question = sum([q["answer_count"] for q in results]) / len(results)
+    API_URL = "https://api.stackexchange.com/2.2/questions"
 
-print("Over the past 2 weeks, PPCG has had...")
-print(round(questions_per_day, 1), "questions per day")
-print(round(answers_per_question, 1), "answers per question")
+    api_parameters = {
+        "site": site,
+        "fromdate": int(start.timestamp()),
+        "todate": int(stop.timestamp()),
+        "pagesize": 100,
+        "page": 1
+    }
+
+    questions = []
+
+    while True:
+        req = requests.get(API_URL, params=api_parameters)
+        contents = req.json()
+
+        if "error_id" in contents:
+            raise ValueError(contents["description"])
+
+        questions.extend(contents["items"])
+
+        if not contents["has_more"]:
+            break
+
+        api_parameters["page"] += 1
+
+        if "backoff" in contents:
+            time.sleep(contents["backoff"])
+
+    return questions
+
+
+def get_area51_estimate(site):
+    """Compute the average questions per day and answers per question.
+
+    Args:
+        site (string): Stack Exchange site to get questions from.
+
+    Returns:
+        (float, float): Questions per day, answers per question.
+
+    Raises:
+        Nothing, but may get a ValueError from get_questions.
+
+    """
+
+    now = datetime.now(timezone.utc)
+    fortnight_ago = now - timedelta(days=14)
+    questions = get_questions(site, fortnight_ago, now)
+
+    question_count = len(questions)
+
+    avg_questions = question_count / 14
+
+    if question_count > 0:
+        avg_answers = sum(q["answer_count"] for q in questions) / question_count
+    else:
+        avg_answers = 0.0
+
+    return avg_questions, avg_answers
+
+
+if __name__ == "__main__":
+    msg = """Over the past 2 weeks, PPCG has had...
+{:.1f} questions per day
+{:.1f} answers per question"""
+
+    print(msg.format(*get_area51_estimate("codegolf")))
+
