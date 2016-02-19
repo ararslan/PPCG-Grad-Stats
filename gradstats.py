@@ -1,7 +1,10 @@
-import requests
-import time
+import requests, time, argparse
 from datetime import datetime, timezone, timedelta
 
+parser = argparse.ArgumentParser(description="Show average questions per day and answers per question for StackExchange sites.")
+parser.add_argument("sites", type=string, nargs="*", help="The names of the sites (default: PPCG).")
+parser.add_argument("--days", type=int, default=14, help="The number of days (default: 14).")
+args = parser.parse_args()
 
 def get_questions(site, start, stop):
     """Get all questions from a site within a given date range.
@@ -80,9 +83,17 @@ def get_area51_estimate(site):
 
 
 if __name__ == "__main__":
-    msg = """Over the past 2 weeks, PPCG has had...
-{:.1f} questions per day
-{:.1f} answers per question"""
-
-    print(msg.format(*get_area51_estimate("codegolf")))
-
+    if(!args.sites):
+        msg = """Over the past 2 weeks, PPCG has had...
+    {:.1f} questions per day
+    {:.1f} answers per question"""
+        
+        print(msg.format(*get_area51_estimate("codegolf")))
+    else:
+        """Over the past {} days, {} has had...
+    {:.1f} questions per day
+    {:.1f} answers per question"""
+        
+        now = datetime.now(timezone.utc)
+        before = now - timedelta(days=args.days)
+        print(msg.format(args.days, site, *get_questions(site, before, now))) for site in args.sites
