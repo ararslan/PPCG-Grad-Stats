@@ -69,12 +69,10 @@ def get_area51_estimate(site):
     fortnight_ago = now - timedelta(days=14)
     questions = get_questions(site, fortnight_ago, now)
 
-    question_count = len(questions)
+    avg_questions = len(questions) / 14
 
-    avg_questions = question_count / 14
-
-    if question_count > 0:
-        avg_answers = sum(q["answer_count"] for q in questions) / question_count
+    if questions:
+        avg_answers = sum(q["answer_count"] for q in questions) / len(questions)
     else:
         avg_answers = 0.0
 
