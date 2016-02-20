@@ -64,7 +64,7 @@ def get_area51_estimate(site, now, before):
     avg_questions = len(questions) / 14
 
     if questions:
-        avg_answers = sum(q["answer_count"] for q in questions) / len(questions)
+        avg_answers = sum(q["answer_count"] for q in questions)/len(questions)
     else:
         avg_answers = 0.0
 
@@ -72,9 +72,14 @@ def get_area51_estimate(site, now, before):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Show average questions per day and answers per question for StackExchange sites.")
-    parser.add_argument("sites", type=str, nargs="*", help="The names of the sites (default: PPCG).")
-    parser.add_argument("--days", type=int, default=14, help="The number of days (default: 14).")
+    parser = argparse.ArgumentParser(description="Show average questions"
+                                     " per day"
+                                     " and answers per question"
+                                     " for StackExchange sites.")
+    parser.add_argument("sites", type=str, nargs="*",
+                        help="The names of the sites (default: PPCG).")
+    parser.add_argument("--days", type=int, default=14,
+                        help="The number of days (default: 14).")
     args = parser.parse_args()
 
     if len(args.sites) == 0:
@@ -92,4 +97,5 @@ if __name__ == "__main__":
         before = now - timedelta(args.days)
 
         for site in args.sites:
-            print(msg.format(args.days, site, *get_area51_estimate(site, now, before)))
+            print(msg.format(args.days, site,
+                             *get_area51_estimate(site, now, before)))
