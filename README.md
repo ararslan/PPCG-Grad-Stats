@@ -14,4 +14,6 @@ If you want to see others stats as well, open an issue, submit a pull request, o
 
 Run from the command line like `python3 gradstats.py` and all of your dreams will come true.
 
+You may need to run `pip3 install requests` before `python3 gradstats.py`.
+
 Disclaimer: This project is in no way affiliated with Stack Exchange, Inc.
