@@ -13,5 +13,6 @@ As such, the only statistics that this currently gathers are the average questio
 If you want to see others stats as well, open an issue, submit a pull request, or just tell me in The Nineteenth Byte.
 
 Run from the command line like `python3 gradstats.py` and all of your dreams will come true.
+Note that the `requests` module is required, which can be installed with `pip3 install requests`.
 
 Disclaimer: This project is in no way affiliated with Stack Exchange, Inc.
